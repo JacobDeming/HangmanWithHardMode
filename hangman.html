@@ -7,22 +7,27 @@
 </head>
 <body>
 <div class="container">
-	<p id="StartPage">Would You Like to Play a Game of Hangman? <button onclick="startGame()">YES</button><button onclick="mustClickYes()">NO</button><span>|</span></p>
-	<p id="BodyOfPage"></p>
-	<p id="LettersGuessed"></p>
-	<p id="ChancesLeft"></p>
+	<div class="StartPage"><p class='first'>Would You Like to Play a Game of Hangman? <button onclick="startGame()">YES</button><span>|</span></p></div>
+	<div id="BodyOfPage"></div>
+	<div class="UnderButtons"></div>
+	<div class="ChancesLeft"></div>
+	<div class="LettersGuessed"></div>
 </div>
 
 <script type="text/javascript">
-//CREATE & INITIALIZE VARIABLES!
-var x;
 
 //LOADS THE DIFFICULTY SCREEN
 function startGame(){
 	var random="";
-	var html="<p>Alright then...</p>"+"<h1>LET'S PLAY!</h1>"+"<br>"+"<p class='chooseDifficulty'>What difficulty would you like to play?<button onclick='easyGame()'>EASY</button><button onclick='mediumGame()'>MEDIUM</button><button onclick='hardGame()'>HARD</button><span>|</span></p>";
-	document.querySelector('#StartPage').innerHTML=html;}
-	
+	var html="<p class='first'>Alright then...</p>"+"<h1>LET'S PLAY!</h1>"+"<br>"+"<p class='chooseDifficulty'>What difficulty would you like to play?<button onclick='easyGame()'>EASY</button><button onclick='mediumGame()'>MEDIUM</button><button onclick='hardGame()'>HARD</button><span>|</span></p>";
+	document.querySelector('.StartPage').innerHTML=html;}
+
+//CREATES THE GAME BOARD
+function makeBoard(blankWord){
+	var html="";
+	for(var i=0;i<blankWord.length;i++){
+		html=html+" "+blankWord[i];}
+	document.querySelector('#BodyOfPage').innerHTML=html;}
 
 //STARTS UP AN EASY GAME
 function easyGame(){
@@ -32,59 +37,45 @@ function easyGame(){
 	var random=dictionary[Math.floor(Math.random()*dictionary.length)];
 		for(var i=0;i<random.length;i++){
 			wordChoice.push(random.charAt(i));}
-	var blankWord=makeBlanks(wordChoice);
-	makeBoard(blankWord,chances);
-	hangman(blankWord,wordChoice,chances);}
+	hangman(wordChoice,chances);}
 
 //STARTS UP A MEDIUM GAME
-function hardGame(){
+function mediumGame(){
 	var dictionary=['DEDICATED','HEADBAND','GOAL','MICROWAVE','REFRIGERATOR','TOWER','DICTIONARY','VIDEO','MOVIE','CHANDELIER','WINDOWPANE','ROOF','BASEMENT','UNIVERSITY','LAWNMOWER','HELICOPTER','TRANSIT','EYEBROWS','GAME','TARGET','AERIAL','NET','APPLAUSE','MASCOT','MASQUERADE','TOE','TOP','ZERO','QUIET','CAPTAIN','PENALTY','DENIED','VASE','FLAG','APPLESAUCE','ENCYCLOPEDIA','MAGAZINE','NEWSPAPER'];
 	var chances=3;
 	var wordChoice=[];
 	var random=dictionary[Math.floor(Math.random()*dictionary.length)];
 		for(var i=0;i<random.length;i++){
 			wordChoice.push(random.charAt(i));}
-	var blankWord=makeBlanks(wordChoice);
-	makeBoard(blankWord,chances);
-	hangman(blankWord,wordChoice,chances);}
+	hangman(wordChoice,chances);}
 
-//STARTS UP A HARD GAME
-function hardGame(){
-	var chances=5;
-	var wordChoice=[];
-	var random=hardDictionary[Math.floor(Math.random()*hardDictionary.length)];
-		for(var i=0;i<random.length;i++){
-			wordChoice.push(random.charAt(i));}
-	var blankWord=makeBlanks(wordChoice);
-	makeBoard(blankWord,chances);
-	hangman(blankWord,wordChoice,chances);}
-
-//CREATE BLANKS TO FILL IN FOR ANSWER
-function makeBlanks(x){
-	var blankWord=[];
-	for(var i=0;i<x.length;i++){
-		if(x[i]==" "){
-			blankWord.push(" ");}
-		else{
-			blankWord.push("_");}}
-	return blankWord;}
-
-//CREATES THE GAME BOARD
-function makeBoard(blankWord){
+//RUNS THE EASY AND MEDIUM MODES FOR HANGMAN
+function hangman(wordChoice,chances){
+//FUNCTION TO MAKE THE GAME BOARD
+	function makeBoard(blankWord){
 	var html="";
 	for(var i=0;i<blankWord.length;i++){
 		html=html+" "+blankWord[i];}
 	document.querySelector('#BodyOfPage').innerHTML=html;}
-
-function hangman(blankWord,wordChoice,chances){
+//INITIALIZES VARIABLES
 	var chances=chances;
 	var guessed=[];
 	var html2="Number of Chances Left: "+chances;
-	document.querySelector('#ChancesLeft').innerHTML=html2
+	var blankWord=[];
+	var html="";
+//SETS BLANKWORD AND CREATES THE INITIAL BOARD
+	for(var i=0;i<wordChoice.length;i++){
+		if(wordChoice[i]==" "){
+			blankWord.push(" ");}
+		else{
+			blankWord.push("_");}}
+	makeBoard(blankWord);
+//PLAYER GUESSES
+	document.querySelector('.ChancesLeft').innerHTML=html2;
 	document.onkeyup=function(event){
 		var pick=String.fromCharCode(event.keyCode).toUpperCase();
 		guessed.push(pick);
-		document.querySelector('#LettersGuessed').innerHTML=guessed;
+		document.querySelector('.LettersGuessed').innerHTML=guessed;
 		var correct=false;
 		var filledSpace=0;
 			for(var i=0;i<wordChoice.length;i++){
@@ -93,19 +84,125 @@ function hangman(blankWord,wordChoice,chances){
 					blankWord[i]=wordChoice[i];
 					makeBoard(blankWord);
 					html2="Number of Chances Left: "+chances;
-					document.querySelector('#ChancesLeft').innerHTML=html2;}
+					document.querySelector('.ChancesLeft').innerHTML=html2;}
 				if(blankWord[i]==wordChoice[i]){
 					filledSpace++;}}
 			if(correct==false){
 				chances--;
 				var html2="Number of Chances Left: "+chances;
-				document.querySelector('#ChancesLeft').innerHTML=html2;}
+				document.querySelector('.ChancesLeft').innerHTML=html2;}
 			if(filledSpace==blankWord.length){
 				html2="YOU WIN! LET'S PLAY AGAIN!";
-				document.querySelector('#ChancesLeft').innerHTML=html2;}
+				document.querySelector('.ChancesLeft').innerHTML=html2;}
 			if(chances<=0){
 				var html2="YOU LOSE! TRY AGAIN NEXT TIME!";
-				document.querySelector('#ChancesLeft').innerHTML=html2;}}}
+				document.querySelector('.ChancesLeft').innerHTML=html2;}}}
+
+
+
+//ASKS IF PLAYER REALLY WANTS A HARD GAME
+function hardGame(){
+	var html="<p class='hardMode'>WARNING! WARNING! HARD MODE IS EXTREMELY TOUGH!<br>YOU HAVE TO GUESS EACH LETTER INDIVIDUALLY!</p><p class='hardMode2'>ARE YOU SURE YOU WANT TO DO THIS!?<button onclick='welcomeToHardMode()'>YES</button><button onclick='startGame()'>NO</button><span>|</span></p>"
+	var html2="";
+	document.querySelector('#BodyOfPage').innerHTML=html2;
+	document.querySelector('.ChancesLeft').innerHTML=html2;
+	document.querySelector('.LettersGuessed').innerHTML=html2;
+	document.querySelector('.StartPage').innerHTML=html;}
+
+//STARTS HARD MODE
+function welcomeToHardMode(){
+	var html="<p class='hardMode'>IT IS YOUR FUNERAL...</p>"+"<h1 class='hardMode2'>GOOD LUCK!</h1>"+"<br>"+"<p class='hardModeDifficulty'>JUST IN CASE YOU WANT TO GIVE UP OR RETRY!<button onclick='startGame()'>I GIVE UP</button><button onclick='welcomeToHardMode()'>RETRY</button><span>|</span></p>";
+	var body="";
+	document.querySelector('.StartPage').innerHTML=html;
+	document.querySelector('#BodyOfPage').innerHTML=body;
+	var dictionary=['DEDICATED','HEADBAND','GOAL','MICROWAVE','REFRIGERATOR','TOWER','DICTIONARY','VIDEO','MOVIE','CHANDELIER','WINDOWPANE','ROOF','BASEMENT','UNIVERSITY','LAWNMOWER','HELICOPTER','TRANSIT','EYEBROWS','GAME','TARGET','AERIAL','NET','APPLAUSE','MASCOT','MASQUERADE','TOE','TOP','ZERO','QUIET','CAPTAIN','PENALTY','DENIED','VASE','FLAG','APPLESAUCE','ENCYCLOPEDIA','MAGAZINE','NEWSPAPER'];
+	var chances=6;
+	var wordChoice=[];
+	var blankWord=[];
+	var random=dictionary[Math.floor(Math.random()*dictionary.length)];
+		for(var i=0;i<random.length;i++){
+			wordChoice.push(random.charAt(i));}
+		for(var i=0;i<wordChoice.length;i++){
+			if(wordChoice[i]==" "){
+				blankWord.push(" ");}
+			else{
+				blankWord.push("_");}}
+	underButtons(blankWord);
+	var button=makeHardBoard(wordChoice);
+	console.log(wordChoice);
+	runHardMode(blankWord,wordChoice,button,box,chances);}
+
+//OBJECT FOR CONTAINING THE VALUE OF THE BUTTON CLICKED
+var box={
+	value:0}
+
+//CHANGES THE VALUE OF BOX.VALUE
+function getVal(value){
+	box.value=value;
+	console.log(box.value);}
+	
+
+//MAKES A BLANK BOARD UNDERNEATH THE BUTTONS
+function underButtons(blankWord){
+	var html="";
+	for(var i=0;i<blankWord.length;i++){
+		html=html+" "+blankWord[i];}
+	document.querySelector('.UnderButtons').innerHTML=html;}
+
+//CREATES A BOARD OF CLICKABLE BUTTONS
+function makeHardBoard(wordChoice){
+	button=[];
+	for(var i=0;i<wordChoice.length;i++){
+		button[i]=document.createElement("BUTTON");
+		button[i].text=i+1;
+		button[i].value=i;
+		button[i].id="clickButton";
+		button[i].setAttribute("onclick","getVal(this.value)");
+		document.getElementById("BodyOfPage").appendChild(button[i]);}
+	return button;}
+
+//RUNS HARD-MODE HANGMAN
+function runHardMode(blankWord,wordChoice,button,box,chances){
+//INITIALIZES VARIABLES
+	var chances=chances;
+	var blankWord=blankWord;
+	var box=box;
+	var wordChoice=wordChoice;
+	var guessed=[];
+	var html2="<p class='hardMode3'>Number of Chances Left: "+chances+"</p>";
+	var html="";
+	var filled=0;
+//GIVES THE PLAYER A COUPLE LETTERS OFF THE BAT
+	for(var i=0;i<wordChoice.length;i++){
+		if((i+1)%3==0){
+			blankWord[i]=wordChoice[i];}}
+	underButtons(blankWord);
+//PLAYER GUESSES
+	document.querySelector('.ChancesLeft').innerHTML=html2;
+	document.onkeyup=function(event){
+		var pick=String.fromCharCode(event.keyCode).toUpperCase();
+		guessed.push(pick);
+		document.querySelector('.LettersGuessed').innerHTML=guessed;
+			if(pick==wordChoice[box.value]){
+				blankWord[box.value]=wordChoice[box.value];
+				underButtons(blankWord);
+				html2="<p class='hardMode3'>Number of Chances Left: "+chances+"</p>";
+				document.querySelector('.ChancesLeft').innerHTML=html2;
+				filled++;}
+			if(pick!=wordChoice[box.value]){
+				chances--;
+				html2="<p class='hardMode3'>Number of Chances Left: "+chances+"</p>";
+				document.querySelector('.ChancesLeft').innerHTML=html2;}
+			if(filled==blankWord.length){
+				html2="<p class='hardMode3'>YOU WIN! LET'S PLAY AGAIN!</p>";
+				document.querySelector('.ChancesLeft').innerHTML=html2;}
+			if(chances<=0){
+				var html2="<p class='hardMode3'>YOU LOSE! TRY AGAIN NEXT TIME!</p>";
+				document.querySelector('.ChancesLeft').innerHTML=html2;}}}
+
+
+
+
 
 
 </script>
