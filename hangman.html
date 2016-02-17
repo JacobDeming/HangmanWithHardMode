@@ -186,8 +186,6 @@ function runHardMode(blankWord,wordChoice,button,box,chances){
 	document.querySelector('.ChancesLeft').innerHTML=html2;
 	document.onkeyup=function(event){
 		var pick=String.fromCharCode(event.keyCode).toUpperCase();
-		guessed.push(pick);
-		document.querySelector('.HardLettersGuessed').innerHTML=guessed;
 		if(pick!=blankWord[box.value]){
 			if(pick==wordChoice[box.value]){
 				blankWord[box.value]=wordChoice[box.value];
