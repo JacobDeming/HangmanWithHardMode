@@ -98,6 +98,16 @@ button:hover{
   margin-top: 30px;
 }
 
+.HardLettersGuessed{
+  color: red;
+  text-align: center;
+  font-size: 20px;
+  font-family: "Courier";
+  height: 100%;
+  width: 100%;
+  margin-top: 30px;
+}
+
 .hardMode{
   color: red;
   white-space: nowrap;

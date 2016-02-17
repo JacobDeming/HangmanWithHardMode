@@ -12,6 +12,7 @@
 	<div class="UnderButtons"></div>
 	<div class="ChancesLeft"></div>
 	<div class="LettersGuessed"></div>
+	<div class="HardLettersGuessed"></div>
 </div>
 
 <script type="text/javascript">
@@ -20,6 +21,11 @@
 function startGame(){
 	var random="";
 	var html="<p class='first'>Alright then...</p>"+"<h1>LET'S PLAY!</h1>"+"<br>"+"<p class='chooseDifficulty'>What difficulty would you like to play?<button onclick='easyGame()'>EASY</button><button onclick='mediumGame()'>MEDIUM</button><button onclick='hardGame()'>HARD</button><span>|</span></p>";
+	var html2="";
+	document.querySelector('#BodyOfPage').innerHTML=html2;
+	document.querySelector('.ChancesLeft').innerHTML=html2;
+	document.querySelector('.LettersGuessed').innerHTML=html2;
+	document.querySelector('.UnderButtons').innerHTML=html2;
 	document.querySelector('.StartPage').innerHTML=html;}
 
 //CREATES THE GAME BOARD
@@ -129,7 +135,6 @@ function welcomeToHardMode(){
 				blankWord.push("_");}}
 	underButtons(blankWord);
 	var button=makeHardBoard(wordChoice);
-	console.log(wordChoice);
 	runHardMode(blankWord,wordChoice,button,box,chances);}
 
 //OBJECT FOR CONTAINING THE VALUE OF THE BUTTON CLICKED
@@ -138,8 +143,7 @@ var box={
 
 //CHANGES THE VALUE OF BOX.VALUE
 function getVal(value){
-	box.value=value;
-	console.log(box.value);}
+	box.value=value;}
 	
 
 //MAKES A BLANK BOARD UNDERNEATH THE BUTTONS
@@ -175,6 +179,7 @@ function runHardMode(blankWord,wordChoice,button,box,chances){
 //GIVES THE PLAYER A COUPLE LETTERS OFF THE BAT
 	for(var i=0;i<wordChoice.length;i++){
 		if((i+1)%3==0){
+			filled++;
 			blankWord[i]=wordChoice[i];}}
 	underButtons(blankWord);
 //PLAYER GUESSES
@@ -182,7 +187,8 @@ function runHardMode(blankWord,wordChoice,button,box,chances){
 	document.onkeyup=function(event){
 		var pick=String.fromCharCode(event.keyCode).toUpperCase();
 		guessed.push(pick);
-		document.querySelector('.LettersGuessed').innerHTML=guessed;
+		document.querySelector('.HardLettersGuessed').innerHTML=guessed;
+		if(pick!=blankWord[box.value]){
 			if(pick==wordChoice[box.value]){
 				blankWord[box.value]=wordChoice[box.value];
 				underButtons(blankWord);
@@ -192,13 +198,13 @@ function runHardMode(blankWord,wordChoice,button,box,chances){
 			if(pick!=wordChoice[box.value]){
 				chances--;
 				html2="<p class='hardMode3'>Number of Chances Left: "+chances+"</p>";
-				document.querySelector('.ChancesLeft').innerHTML=html2;}
-			if(filled==blankWord.length){
-				html2="<p class='hardMode3'>YOU WIN! LET'S PLAY AGAIN!</p>";
-				document.querySelector('.ChancesLeft').innerHTML=html2;}
-			if(chances<=0){
-				var html2="<p class='hardMode3'>YOU LOSE! TRY AGAIN NEXT TIME!</p>";
-				document.querySelector('.ChancesLeft').innerHTML=html2;}}}
+				document.querySelector('.ChancesLeft').innerHTML=html2;}}
+		if(filled==blankWord.length){
+			html2="<p class='hardMode3'>YOU WIN! LET'S PLAY AGAIN!</p>";
+			document.querySelector('.ChancesLeft').innerHTML=html2;}
+		if(chances<=0){
+			var html2="<p class='hardMode3'>YOU LOSE! TRY AGAIN NEXT TIME!</p>";
+			document.querySelector('.ChancesLeft').innerHTML=html2;}}}
 
 
 
